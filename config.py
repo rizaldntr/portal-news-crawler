@@ -105,6 +105,19 @@ CONFIG = {
         'EXCLUDE_TEXT': r'Baca Juga|Saksikan video pilihan di bawah ini:',
         'STOP_CRITERION': r'Sumber: .*',
     },
+    'BERITASATU': {
+        'NAME': 'Berita Satu',
+        'START': 'http://www.beritasatu.com/newsindex?indate=%s',
+        'ARTICLES': '//div[@class="media custom-media-index"]/div[@class="media-body"]/a/@href',
+        'NEXT_PAGES': '//ul[@class="pagination modal-1"]/li/a/@href',
+        'TITLE': '//div[@class="title_post landing-headline frr"]/h1/text()',
+        'AUTHOR': '//span[@class="hz_post_by"]/text()',
+        'DATE': '//span[@class="hz_date_post"]/text()',
+        'TAG': '/',
+        'CATEGORY': '/',
+        'CONTENTS': '//div[@class="hz_content mr"]//text()',
+        'STOP_CRITERION': r'Sumber: '
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -114,7 +127,8 @@ CONFIG = {
         'www.cnnindonesia.com',
         'republika.co.id',
         'sindonews.com',
-        'liputan6.com'
+        'liputan6.com',
+        'www.beritasatu.com'
     ]
 }
 

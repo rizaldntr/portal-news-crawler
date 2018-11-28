@@ -21,6 +21,9 @@ class PortalSpider(Spider):
         self.portal = CONFIG[portal.upper()]
         if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika', 'Liputan6']:
             date = date.replace('-', '/')
+        elif self.portal['NAME'] == 'Berita Satu':
+            tmp = date.split("-")
+            date = "{}-{}-{}".format(tmp[2], tmp[1], tmp[0])
         self.date = date
         self.cnn_attr = {
             'page': 1,
@@ -91,6 +94,8 @@ class PortalSpider(Spider):
 
         if self.portal['NAME'] == 'Replubika':
             category = self.strip(category)
+        elif self.portal['NAME'] == 'Berita Satu':
+            category = response.request.url.split("/")[3]
 
         return category
 
