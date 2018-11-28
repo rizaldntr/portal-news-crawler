@@ -78,6 +78,18 @@ CONFIG = {
         'CATEGORY': '//div[@class="breadcome"]/ul/li[2]/a/text()',
         'CONTENTS': '//div[@class="artikel"]//text()',
     },
+    'SINDO': {
+        'NAME': 'Sindo',
+        'START': 'https://index.sindonews.com/index/0?t=%s',
+        'ARTICLES': '//div[@class="indeks-title"]/a/@href',
+        'NEXT_PAGES': '//div[@class="pagination"]/ul/li/a/@href',
+        'TITLE': '//div[@class="article"]/h1/text()',
+        'AUTHOR': '//a[@rel="author"]/text()',
+        'DATE': '//time/text()',
+        'TAG': '//div[@class="tag-list"]/ul/li/a/text()',
+        'CATEGORY': '//ul[@class="breadcrumb"]/li[2]//text()',
+        'CONTENTS': '//div[@id="content"]//text()',
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -85,7 +97,8 @@ CONFIG = {
         'kompas.com',
         'tempo.co',
         'www.cnnindonesia.com',
-        'republika.co.id'
+        'republika.co.id',
+        'sindonews.com'
     ]
 }
 
