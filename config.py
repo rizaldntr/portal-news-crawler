@@ -66,13 +66,26 @@ CONFIG = {
         'CATEGORY': '//a[@class="gtm_breadcrumb_kanal"]//text()',
         'CONTENTS': '//span[@id="detikdetailtext"]//text()',
     },
+    'REPUBLIKA': {
+        'NAME': 'Republika',
+        'START': 'https://www.republika.co.id/index/%s',
+        'ARTICLES': '//div[@class="txt_subkanal txt_index"]/h2/a/@href',
+        'NEXT_PAGES': '//nav[@role="navigation"]/a/@href',
+        'TITLE': '//div[@class="wrap_detail_set"]/h1/text()',
+        'AUTHOR': '//div[@class="by"]/span/p/text()',
+        'DATE': '//div[@class="date_detail"]/p/text()',
+        'TAG': '//div[@class="wrap_blok_tag"]/ul/li/h1/a/text()',
+        'CATEGORY': '//div[@class="breadcome"]/ul/li[2]/a/text()',
+        'CONTENTS': '//div[@class="artikel"]//text()',
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
         'news.detik.com',
         'kompas.com',
         'tempo.co',
-        'www.cnnindonesia.com'
+        'www.cnnindonesia.com',
+        'republika.co.id'
     ]
 }
 

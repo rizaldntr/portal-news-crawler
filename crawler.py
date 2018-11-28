@@ -19,7 +19,7 @@ class PortalSpider(Spider):
     def __init__(self, date='', portal='DETIK', **kwargs):
         super().__init__(**kwargs)
         self.portal = CONFIG[portal.upper()]
-        if self.portal['NAME'] in ['Tempo', 'CNN']:
+        if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika']:
             date = date.replace('-', '/')
         self.date = date
         self.cnn_attr = {
@@ -42,6 +42,8 @@ class PortalSpider(Spider):
             self.cnn_attr['page'] = self.cnn_attr['page'] + 1
             pages.append(self.portal['START'] %
                          (self.date, self.cnn_attr['page'], self.date))
+        elif self.portal['NAME'] == 'Republika' and len(articles) < 40:
+            pages = []
         else:
             pages = response.xpath(self.portal['NEXT_PAGES']).extract()
 
@@ -83,7 +85,12 @@ class PortalSpider(Spider):
         return ', '.join(tags)
 
     def parse_category(self, response):
-        return response.xpath(self.portal['CATEGORY']).extract_first()
+        category = response.xpath(self.portal['CATEGORY']).extract_first()
+
+        if self.portal['NAME'] == 'Replubika':
+            category = self.strip(category)
+
+        return category
 
     def parse_content(self, response):
         regex = re.compile(r'[\n\r\t]')
