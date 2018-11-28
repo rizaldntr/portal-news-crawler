@@ -90,6 +90,21 @@ CONFIG = {
         'CATEGORY': '//ul[@class="breadcrumb"]/li[2]//text()',
         'CONTENTS': '//div[@id="content"]//text()',
     },
+    'LIPUTAN6': {
+        'NAME': 'Liputan6',
+        'START': 'https://www.liputan6.com/news/indeks/%s',
+        'ARTICLES': '//h4[@class="articles--rows--item__title"]/a/@href',
+        'NEXT_PAGES': '//ul[@class="simple-pagination__page-numbers js-pagination"]/li/a/@href',
+        'TITLE': '//h1[@class="read-page--header--title entry-title"]//text()',
+        'AUTHOR': '//span[@class="read-page--header--author__name fn"]/text()',
+        'DATE': '//time[@class="read-page--header--author__datetime updated"]/text()',
+        'TAG': '//ul[@class="tags--snippet__list"]/li/a/span/text()',
+        'CATEGORY': '//li[@class="read-page--breadcrumb--item"][2]//text()',
+        'CONTENTS': '//div[@class="article-content-body article-content-body_with-aside"]//text()',
+        'EXCLUDE_LINK': '//div[@class="baca-juga"]//text()',
+        'EXCLUDE_TEXT': r'Baca Juga|Saksikan video pilihan di bawah ini:',
+        'STOP_CRITERION': r'Sumber: .*',
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -98,7 +113,8 @@ CONFIG = {
         'tempo.co',
         'www.cnnindonesia.com',
         'republika.co.id',
-        'sindonews.com'
+        'sindonews.com',
+        'liputan6.com'
     ]
 }
 

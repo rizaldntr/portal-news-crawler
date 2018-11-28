@@ -19,7 +19,7 @@ class PortalSpider(Spider):
     def __init__(self, date='', portal='DETIK', **kwargs):
         super().__init__(**kwargs)
         self.portal = CONFIG[portal.upper()]
-        if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika']:
+        if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika', 'Liputan6']:
             date = date.replace('-', '/')
         self.date = date
         self.cnn_attr = {
@@ -34,6 +34,8 @@ class PortalSpider(Spider):
                 article = '{}?page=all'.format(article)
             elif self.portal['NAME'] == "CNN":
                 article = article.replace("\\", "")
+            elif self.portal['NAME'] == "Liputan6" and "/foto-" in article:
+                continue
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
         pages = []
