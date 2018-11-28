@@ -118,6 +118,23 @@ CONFIG = {
         'CONTENTS': '//div[@class="hz_content mr"]//text()',
         'STOP_CRITERION': r'Sumber: '
     },
+    'BISNIS': {
+        'NAME': 'Bisnis',
+        'START': 'http://www.bisnis.com/index',
+        'ARTICLES': '//ul[@class="list-news channel finansial posts"]/li/div[2]/h2/a/@href',
+        'NEXT_PAGES': '/',
+        'TITLE': '//h1[@class="title"]/text() | //h1[@class="title style2"]/text() | //div[@class="main-news"]/h1/text()',
+        'AUTHOR': '//div[@class="author"]/span/text() | //div[@class="description series"]//text()',
+        'DATE': '//div[@class="wrapper-date"]//text() | //span[@class="date"]/text()',
+        'TAG': '//div[@class="tags"]/a/text() | //ul[@class="tag"]/li/a/text()',
+        'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/span/text() | //div[@class="title-channel"]/a/text() | //ul[@class="breadcrumb"]/li[@class="active"]/a/text()',
+        'CONTENTS': '//div[@class="description"]/div[@class="row"]/div[@class="col-sm-10"]//text()',
+        'EXCLUDE_LINK': '//div[@class="photo-details"]//text()',
+        'FORM_DATA': {
+            'listkanal': '0',
+            'tampilkan': 'submit'
+        }
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -128,7 +145,8 @@ CONFIG = {
         'republika.co.id',
         'sindonews.com',
         'liputan6.com',
-        'www.beritasatu.com'
+        'www.beritasatu.com',
+        'bisnis.com'
     ]
 }
 

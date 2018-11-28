@@ -1,6 +1,6 @@
 import re
 
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 from scrapy.spiders import Spider
 from scrapy.crawler import CrawlerProcess
 from config import CONFIG
@@ -13,6 +13,12 @@ class PortalSpider(Spider):
     def start_requests(self):
         if self.portal['NAME'] == 'CNN':
             yield Request(self.portal['START'] % (self.date, self.cnn_attr['page'], self.date), headers={'User-Agent': CONFIG['USER_AGENT']})
+        elif self.portal['NAME'] == 'Bisnis':
+            dates = self.date.split("-")
+            self.portal['FORM_DATA']['day'] = dates[2]
+            self.portal['FORM_DATA']['month'] = dates[1]
+            self.portal['FORM_DATA']['year'] = dates[0]
+            yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -38,6 +44,8 @@ class PortalSpider(Spider):
             elif self.portal['NAME'] == "CNN":
                 article = article.replace("\\", "")
             elif self.portal['NAME'] == "Liputan6" and "/foto-" in article:
+                continue
+            elif self.portal['NAME'] == "Bisnis" and "koran.bisnis" in article:
                 continue
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -82,6 +90,12 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == "CNN":
             date = date.replace("CNN Indonesia | ", "")
             date = self.strip(date)
+        elif self.portal['NAME'] == "Bisnis":
+            date = response.xpath(self.portal['DATE']).extract()
+            if len(date) > 1:
+                date = "{}-{}-{}".format(date[1][1:], date[3][1:], date[6][1:])
+            else:
+                date = date[0]
 
         return date
 
