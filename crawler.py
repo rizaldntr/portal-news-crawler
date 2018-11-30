@@ -1,9 +1,13 @@
 import re
+import locale
 
 from scrapy.http import Request, FormRequest
 from scrapy.spiders import Spider
 from scrapy.crawler import CrawlerProcess
+from datetime import datetime
+
 from config import CONFIG
+locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
 
 
 class PortalSpider(Spider):
@@ -19,6 +23,8 @@ class PortalSpider(Spider):
             self.portal['FORM_DATA']['month'] = dates[1]
             self.portal['FORM_DATA']['year'] = dates[0]
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == "Media Indonesia":
+            yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -38,6 +44,8 @@ class PortalSpider(Spider):
 
     def parse(self, response):
         articles = response.xpath(self.portal['ARTICLES']).extract()
+
+        count = 0
         for article in articles:
             if self.portal['NAME'] == "Tribun":
                 article = '{}?page=all'.format(article)
@@ -47,6 +55,13 @@ class PortalSpider(Spider):
                 continue
             elif self.portal['NAME'] == "Bisnis" and "koran.bisnis" in article:
                 continue
+            elif self.portal['NAME'] == "Media Indonesia":
+                if self.filter_by_date(response, count) == 0:
+                    return
+                elif self.filter_by_date(response, count) == 2:
+                    continue
+                count = count + 1
+
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
         pages = []
@@ -96,6 +111,9 @@ class PortalSpider(Spider):
                 date = "{}-{}-{}".format(date[1][1:], date[3][1:], date[6][1:])
             else:
                 date = date[0]
+        elif self.portal['NAME'] == "Media Indonesia":
+            date = date.replace("Pada: ", "")
+            date = self.strip(date)
 
         return date
 
@@ -135,6 +153,8 @@ class PortalSpider(Spider):
 
         contents_result = ''
         contents = response.xpath(self.portal['CONTENTS']).extract()
+        if self.portal['NAME'] == "Media Indonesia":
+            contents = contents[7:]
         for content in contents:
             if content in exclude_link:
                 continue
@@ -181,3 +201,19 @@ class PortalSpider(Spider):
         result = result.lstrip()
 
         return result
+
+    def filter_by_date(self, response, count):
+        if self.portal['NAME'] == "Media Indonesia":
+            art_date_tmp = response.xpath(
+                self.portal['ART_DATE']).extract()[count]
+            art_date_tmp = art_date_tmp.split(",")
+            art_date = art_date_tmp[1][1:]
+        filter_date = datetime.strptime(self.date, '%Y-%m-%d')
+        art_date = datetime.strptime(art_date, '%d %b %Y')
+
+        if art_date == filter_date:
+            return 1
+        elif art_date > filter_date:
+            return 2
+        else:
+            return 0

@@ -135,6 +135,21 @@ CONFIG = {
             'tampilkan': 'submit'
         }
     },
+    'MEDIAINDONESIA': {
+        'NAME': 'Media Indonesia',
+        'START': 'http://mediaindonesia.com/read',
+        'ARTICLES': '//div[@class="article-content"]/h2/a/@href',
+        'NEXT_PAGES': '//div[@class="pagination"]/a/@href',
+        'TITLE': '//div[@class="article-title"]/h1/b/text()',
+        'AUTHOR': '//div[@class="author"]/div[@class="a-content"]/span/b/text()',
+        'DATE': '//div[@class="article-title"]/div/div/span[@class="meta"]/text()',
+        'TAG': '//div[@class="article-tags tag-cloud"]/a/text()',
+        'CATEGORY': '/',
+        'CONTENTS': '//div[@itemprop="articleBody"]//text()',
+        'EXCLUDE_LINK': '//div[@itemprop="articleBody"]//a/text() | //div[@class="dable_placeholder"]//text()',
+        'EXCLUDE_TEXT': r'Baca juga:',
+        'ART_DATE': '//div[@class="article-content"]/span/a[2]/text()'
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -146,7 +161,8 @@ CONFIG = {
         'sindonews.com',
         'liputan6.com',
         'www.beritasatu.com',
-        'bisnis.com'
+        'bisnis.com',
+        'mediaindonesia.com'
     ]
 }
 
