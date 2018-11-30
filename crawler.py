@@ -23,7 +23,7 @@ class PortalSpider(Spider):
             self.portal['FORM_DATA']['month'] = dates[1]
             self.portal['FORM_DATA']['year'] = dates[0]
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
-        elif self.portal['NAME'] == "Media Indonesia":
+        elif self.portal['NAME'] in ["Media Indonesia", "Antara News"]:
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
@@ -55,7 +55,7 @@ class PortalSpider(Spider):
                 continue
             elif self.portal['NAME'] == "Bisnis" and "koran.bisnis" in article:
                 continue
-            elif self.portal['NAME'] == "Media Indonesia":
+            elif self.portal['NAME'] in ["Media Indonesia", "Antara News"]:
                 if self.filter_by_date(response, count) == 0:
                     return
                 elif self.filter_by_date(response, count) == 2:
@@ -90,7 +90,7 @@ class PortalSpider(Spider):
 
     def parse_author(self, response):
         author = response.xpath(self.portal['AUTHOR']).extract_first()
-        if self.portal['NAME'] == 'Tribun':
+        if self.portal['NAME'] in ['Tribun', 'Antara News']:
             nrt_strip = re.compile(r'[\n\r\t]')
             author = nrt_strip.sub("", author)
             author = author.replace("Editor: ", "")
@@ -113,6 +113,8 @@ class PortalSpider(Spider):
                 date = date[0]
         elif self.portal['NAME'] == "Media Indonesia":
             date = date.replace("Pada: ", "")
+            date = self.strip(date)
+        elif self.portal['NAME'] == "Antara News":
             date = self.strip(date)
 
         return date
@@ -208,9 +210,17 @@ class PortalSpider(Spider):
                 self.portal['ART_DATE']).extract()[count]
             art_date_tmp = art_date_tmp.split(",")
             art_date = art_date_tmp[1][1:]
-        filter_date = datetime.strptime(self.date, '%Y-%m-%d')
-        art_date = datetime.strptime(art_date, '%d %b %Y')
+            art_date = datetime.strptime(art_date, '%d %b %Y')
+        elif self.portal['NAME'] == "Antara News":
+            art_date = response.xpath(
+                self.portal['ART_DATE']).extract()[count]
+            if "menit lalu" in art_date:
+                art_date = datetime.now()
+            else:
+                art_date = art_date[1:-6]
+                art_date = datetime.strptime(art_date, '%d %B %Y')
 
+        filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:
             return 1
         elif art_date > filter_date:

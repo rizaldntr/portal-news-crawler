@@ -150,6 +150,21 @@ CONFIG = {
         'EXCLUDE_TEXT': r'Baca juga:',
         'ART_DATE': '//div[@class="article-content"]/span/a[2]/text()'
     },
+    'ANTARANEWS': {
+        'NAME': 'Antara News',
+        'START': 'https://www.antaranews.com/terkini',
+        'ARTICLES': '//article[@class="simple-post simple-big clearfix"]/header/h3/a/@href',
+        'NEXT_PAGES': '//ul[@class="pagination pagination-sm"]/li/a/@href',
+        'TITLE': '//h1[@class="post-title"]/text()',
+        'AUTHOR': '//p[@class="text-muted small"]//text()[2]',
+        'DATE': '//span[@class="article-date"]/text()',
+        'TAG': '//ul[@class="tags-widget clearfix"]/li/a/text()',
+        'CATEGORY': '/',
+        'CONTENTS': '//div[@class="post-content clearfix"]//text()',
+        'EXCLUDE_LINK': '//b//text()',
+        'STOP_CRITERION': r'Baca juga: ',
+        'ART_DATE': '//article[@class="simple-post simple-big clearfix"]/header/p/span/text()'
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -162,7 +177,8 @@ CONFIG = {
         'liputan6.com',
         'www.beritasatu.com',
         'bisnis.com',
-        'mediaindonesia.com'
+        'mediaindonesia.com',
+        'antaranews.com'
     ]
 }
 
