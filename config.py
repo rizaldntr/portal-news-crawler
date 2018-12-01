@@ -165,6 +165,19 @@ CONFIG = {
         'STOP_CRITERION': r'Baca juga: ',
         'ART_DATE': '//article[@class="simple-post simple-big clearfix"]/header/p/span/text()'
     },
+    'OKEZONE': {
+        'NAME': 'Okezone',
+        'START': 'https://index.okezone.com/bydate/index/%s',
+        'ARTICLES': '//h4[@class="f17"]/a/@href',
+        'NEXT_PAGES': '//div[@class="pagination-indexs"]//a/@href',
+        'TITLE': '//div[@class="title"]/h1/text()',
+        'AUTHOR': '//div[@class="namerep"]/text()',
+        'DATE': '//div[@class="namerep"]/b/text()',
+        'TAG': '//div[@class="detail-tag"]/ul/li/a/text()',
+        'CATEGORY': '//div[@class="breadcrumb"]/ul/li[2]/a/text()',
+        'CONTENTS': '//div[@id="contentx"]//p//text()',
+        'EXCLUDE_TEXT': r'.*baca juga.*',
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -178,7 +191,8 @@ CONFIG = {
         'www.beritasatu.com',
         'bisnis.com',
         'mediaindonesia.com',
-        'antaranews.com'
+        'antaranews.com',
+        'okezone.com'
     ]
 }
 

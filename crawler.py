@@ -31,7 +31,7 @@ class PortalSpider(Spider):
     def __init__(self, date='', portal='DETIK', **kwargs):
         super().__init__(**kwargs)
         self.portal = CONFIG[portal.upper()]
-        if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika', 'Liputan6']:
+        if self.portal['NAME'] in ['Tempo', 'CNN', 'Republika', 'Liputan6', 'Okezone']:
             date = date.replace('-', '/')
         elif self.portal['NAME'] == 'Berita Satu':
             tmp = date.split("-")
@@ -61,6 +61,8 @@ class PortalSpider(Spider):
                 elif self.filter_by_date(response, count) == 2:
                     continue
                 count = count + 1
+            elif self.portal['NAME'] == "Okezone" and "lifestyle" in article:
+                continue
 
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -94,6 +96,9 @@ class PortalSpider(Spider):
             nrt_strip = re.compile(r'[\n\r\t]')
             author = nrt_strip.sub("", author)
             author = author.replace("Editor: ", "")
+        elif self.portal['NAME'] == 'Okezone':
+            author = self.strip(author)
+            author = author[:-1]
 
         return author
 
