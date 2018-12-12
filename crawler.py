@@ -23,6 +23,9 @@ class PortalSpider(Spider):
             self.portal['FORM_DATA']['month'] = dates[1]
             self.portal['FORM_DATA']['year'] = dates[0]
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == 'VIVA':
+            self.portal['FORM_DATA']['last_publish_date'] = self.date + " 23:59:59"
+            yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         elif self.portal['NAME'] in ["Media Indonesia", "Antara News"]:
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         else:
@@ -36,15 +39,16 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Berita Satu':
             tmp = date.split("-")
             date = "{}-{}-{}".format(tmp[2], tmp[1], tmp[0])
+        elif self.portal['NAME'] == 'CNN':
+            self.cnn_attr = {
+                'page': 1,
+                'articles_size': 0
+            }
+
         self.date = date
-        self.cnn_attr = {
-            'page': 1,
-            'articles_size': 0
-        }
 
     def parse(self, response):
         articles = response.xpath(self.portal['ARTICLES']).extract()
-
         count = 0
         for article in articles:
             if self.portal['NAME'] == "Tribun":
@@ -63,6 +67,9 @@ class PortalSpider(Spider):
                 count = count + 1
             elif self.portal['NAME'] == "Okezone" and "lifestyle" in article:
                 continue
+            elif self.portal['NAME'] == "VIVA":
+                if self.filter_by_date(response, 0) == 0:
+                    return
 
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -74,6 +81,12 @@ class PortalSpider(Spider):
                          (self.date, self.cnn_attr['page'], self.date))
         elif self.portal['NAME'] == 'Republika' and len(articles) < 40:
             pages = []
+        elif self.portal['NAME'] == 'VIVA':
+            pages = []
+            data = response.xpath(
+                '//script/text()')[-1].re("window.last_publish_date = (.+?);\n")
+            self.portal['FORM_DATA']['last_publish_date'] = data[0].strip('\"')
+            yield FormRequest(self.portal['START'], self.parse, headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         else:
             pages = response.xpath(self.portal['NEXT_PAGES']).extract()
 
@@ -224,6 +237,11 @@ class PortalSpider(Spider):
             else:
                 art_date = art_date[1:-6]
                 art_date = datetime.strptime(art_date, '%d %B %Y')
+        elif self.portal['NAME'] == "VIVA":
+            data = response.xpath(
+                '//script/text()')[-1].re("window.last_publish_date = (.+?);\n")
+            date = data[0].strip('\"').split(" ")
+            art_date = datetime.strptime(date[0], '%Y-%m-%d')
 
         filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:

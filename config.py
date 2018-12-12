@@ -178,6 +178,25 @@ CONFIG = {
         'CONTENTS': '//div[@id="contentx"]//p//text()',
         'EXCLUDE_TEXT': r'.*baca juga.*',
     },
+    'VIVA': {
+        'NAME': 'VIVA',
+        'START': 'https://www.viva.co.id/request/indeks',
+        'ARTICLES': '//a[@class="title-content"]/@href',
+        'NEXT_PAGES': '/',
+        'TITLE': '//div[@class="leading-title"]/h1/text()',
+        'AUTHOR': '//meta[@property="dable:author"]/@content',
+        'DATE': '//div[@class="date"]/text()',
+        'TAG': '//meta[@name="keywords"]/@content',
+        'CATEGORY': '//li[@itemprop="itemListElement"][1]//text()',
+        'CONTENTS': '//div[@id="article-detail-content"]//text()',
+        'EXCLUDE_LINK': '//div[@class="article-list lihat-juga lihat-juga-2"]//text()',
+        'FORM_DATA': {
+            'channel_name': 'all',
+            'subchannel_name': 'all',
+            'type': 'art',
+            '_token': 'vmfkkQnXY13pyBnPnIj6R0dVtIfwOykUXDDohXDA',
+        }
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -192,7 +211,8 @@ CONFIG = {
         'bisnis.com',
         'mediaindonesia.com',
         'antaranews.com',
-        'okezone.com'
+        'okezone.com',
+        'viva.co.id'
     ]
 }
 
