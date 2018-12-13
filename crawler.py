@@ -284,5 +284,5 @@ class PortalSpider(Spider):
 #     'FEED_URI': 'data.json'
 # })
 
-# process.crawl(PortalSpider, date="2018-12-12", portal="CNN")
+# process.crawl(PortalSpider, date="2018-12-12", portal="pikiran-rakyat")
 # process.start()  # the script will block here until the crawling is finished
