@@ -1,4 +1,5 @@
 import re
+import json
 import locale
 
 from scrapy.http import Request, FormRequest
@@ -28,6 +29,8 @@ class PortalSpider(Spider):
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         elif self.portal['NAME'] in ["Media Indonesia", "Antara News"]:
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
+        elif self.portal['NAME'] == 'Pikiran Rakyat':
+            yield Request(self.portal['START'] % 1, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -112,6 +115,8 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Okezone':
             author = self.strip(author)
             author = author[:-1]
+        elif self.portal['NAME'] == 'Pikiran Rakyat':
+            author = self.strip(author)
 
         return author
 
@@ -132,7 +137,7 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == "Media Indonesia":
             date = date.replace("Pada: ", "")
             date = self.strip(date)
-        elif self.portal['NAME'] == "Antara News":
+        elif self.portal['NAME'] in ["Antara News", "Pikiran Rakyat"]:
             date = self.strip(date)
 
         return date
@@ -242,6 +247,9 @@ class PortalSpider(Spider):
                 '//script/text()')[-1].re("window.last_publish_date = (.+?);\n")
             date = data[0].strip('\"').split(" ")
             art_date = datetime.strptime(date[0], '%Y-%m-%d')
+        elif self.portal['NAME'] == "Pikiran Rakyat":
+            dates = response['published_at'].split(" ")
+            art_date = datetime.strptime(dates[0], '%Y-%m-%d')
 
         filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:
@@ -250,3 +258,23 @@ class PortalSpider(Spider):
             return 2
         else:
             return 0
+
+    def parse_pikiran_rakyat(self, response):
+        json_response = json.loads(response.body_as_unicode())
+        articles = json_response['data']
+        for article in articles:
+            filter_date = self.filter_by_date(article, 0)
+            if filter_date == 2:
+                continue
+            elif filter_date == 0:
+                return
+
+            category_slug = article['category']['slug']
+            date_ = article['published_at'].split(" ")[0]
+            date_ = date_.replace("-", "/")
+            url = "https://www.pikiran-rakyat.com/{}/{}/{}".format(
+                category_slug, date_, article['slug'])
+            yield Request(url, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
+
+        next_page = json_response['meta']['current_page'] + 1
+        yield Request(self.portal['START'] % next_page, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})

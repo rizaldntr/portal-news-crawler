@@ -195,7 +195,19 @@ CONFIG = {
             'subchannel_name': 'all',
             'type': 'art',
             '_token': 'vmfkkQnXY13pyBnPnIj6R0dVtIfwOykUXDDohXDA',
-        }
+        },
+    },
+    'PIKIRAN-RAKYAT': {
+        'NAME': 'Pikiran Rakyat',
+        'START': 'https://www.pikiran-rakyat.com/api/articles?limit=10&page=%s',
+        'ARTICLES': '/',
+        'NEXT_PAGES': '/',
+        'TITLE': '//article/h1[1]//text()',
+        'AUTHOR': '//article//small[@class="text-muted"][1]//text()',
+        'DATE': '//article//small[@class="text-muted"][2]//text()',
+        'TAG': '//div[@class="tag rounded mt-3"]/ul/li//text()',
+        'CATEGORY': '//a[@class="btn active btn-secondary btn-sm"]/text()',
+        'CONTENTS': '//div[@id="content-article"]//text()',
     },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
@@ -212,7 +224,8 @@ CONFIG = {
         'mediaindonesia.com',
         'antaranews.com',
         'okezone.com',
-        'viva.co.id'
+        'viva.co.id',
+        'www.pikiran-rakyat.com'
     ]
 }
 
