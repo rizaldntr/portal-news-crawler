@@ -42,12 +42,10 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Berita Satu':
             tmp = date.split("-")
             date = "{}-{}-{}".format(tmp[2], tmp[1], tmp[0])
-        elif self.portal['NAME'] == 'CNN':
-            self.cnn_attr = {
-                'page': 1,
-                'articles_size': 0
-            }
-
+        self.cnn_attr = {
+            'page': 1,
+            'articles_size': 0
+        }
         self.date = date
 
     def parse(self, response):
@@ -278,3 +276,13 @@ class PortalSpider(Spider):
 
         next_page = json_response['meta']['current_page'] + 1
         yield Request(self.portal['START'] % next_page, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})
+
+
+# process = CrawlerProcess({
+#     'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+#     'FEED_FORMAT': 'json',
+#     'FEED_URI': 'data.json'
+# })
+
+# process.crawl(PortalSpider, date="2018-12-12", portal="CNN")
+# process.start()  # the script will block here until the crawling is finished
