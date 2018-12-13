@@ -50,21 +50,21 @@ $ scrapy runspider crawler.py -a date=2018-11-29 -a portal=pikiran-rakyat -o cra
 
 Portal Name:
 
-- KOMPAS
-- DETIK
-- TRIBUN
-- TEMPO
-- CNN
-- REPUBLIKA
-- SINDO
-- LIPUTAN6
+- ANTARANEWS
 - BERITASATU
 - BISNIS
+- CNN
+- DETIK
+- KOMPAS
+- LIPUTAN6
 - MEDIAINDONESIA
-- ANTARANEWS
 - OKEZONE
-- VIVA
 - PIKIRAN-RAKYAT
+- REPUBLIKA
+- SINDO
+- TEMPO
+- TRIBUN
+- VIVA
 
 Format File:
 
