@@ -78,15 +78,17 @@ Format File:
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
-class MySpider(scrapy.Spider):
+class PortalSpider(Spider):
     # Your spider definition
     ...
 
 process = CrawlerProcess({
-    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
+    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+    'FEED_FORMAT': 'json',
+    'FEED_URI': 'data.json'
 })
 
-process.crawl(MySpider)
+process.crawl(MySpider, date=[DATE], portal=[PORTAL_NAME])
 process.start() # the script will block here until the crawling is finished
 ```
 
