@@ -19,11 +19,9 @@ class PortalSpider(Spider):
         if self.portal['NAME'] == 'CNN':
             yield Request(self.portal['START'] % (self.date, self.cnn_attr['page'], self.date), headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'Bisnis':
-            dates = self.date.split("-")
-            self.portal['FORM_DATA']['day'] = dates[2]
-            self.portal['FORM_DATA']['month'] = dates[1]
-            self.portal['FORM_DATA']['year'] = dates[0]
-            yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+            date_tmp = datetime.strptime(self.date, '%Y-%m-%d')
+            date_tmp = date_tmp.strftime("%d+%B+%Y")
+            yield Request(self.portal['START'] % date_tmp, headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'VIVA':
             self.portal['FORM_DATA']['last_publish_date'] = self.date + " 23:59:59"
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
@@ -115,6 +113,10 @@ class PortalSpider(Spider):
             author = author[:-1]
         elif self.portal['NAME'] == 'Pikiran Rakyat':
             author = self.strip(author)
+        elif self.portal['NAME'] == 'Pikiran Rakyat':
+            author = response.xpath(self.portal['DATE']).extract()
+            author = author[1].split("|")[0]
+            author = self.strip(author)
 
         return author
 
@@ -128,10 +130,8 @@ class PortalSpider(Spider):
             date = self.strip(date)
         elif self.portal['NAME'] == "Bisnis":
             date = response.xpath(self.portal['DATE']).extract()
-            if len(date) > 1:
-                date = "{}-{}-{}".format(date[1][1:], date[3][1:], date[6][1:])
-            else:
-                date = date[0]
+            date = date[1].split("|")[1]
+            date = self.strip(date)
         elif self.portal['NAME'] == "Media Indonesia":
             date = date.replace("Pada: ", "")
             date = self.strip(date)
@@ -204,7 +204,9 @@ class PortalSpider(Spider):
             tags = self.parse_tag(response)
             category = self.parse_category(response)
             content = self.parse_content(response)
-        except Exception:
+        except Exception as e:
+            print("================================================================")
+            print(e)
             is_store = False
 
         if is_store:

@@ -120,20 +120,15 @@ CONFIG = {
     },
     'BISNIS': {
         'NAME': 'Bisnis',
-        'START': 'http://www.bisnis.com/index',
-        'ARTICLES': '//ul[@class="list-news channel finansial posts"]/li/div[2]/h2/a/@href',
-        'NEXT_PAGES': '/',
-        'TITLE': '//h1[@class="title"]/text() | //h1[@class="title style2"]/text() | //div[@class="main-news"]/h1/text()',
-        'AUTHOR': '//div[@class="author"]/span/text() | //div[@class="description series"]//text()',
-        'DATE': '//div[@class="wrapper-date"]//text() | //span[@class="date"]/text()',
-        'TAG': '//div[@class="tags"]/a/text() | //ul[@class="tag"]/li/a/text()',
-        'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/span/text() | //div[@class="title-channel"]/a/text() | //ul[@class="breadcrumb"]/li[@class="active"]/a/text()',
-        'CONTENTS': '//div[@class="description"]/div[@class="row"]/div[@class="col-sm-10"]//text()',
-        'EXCLUDE_LINK': '//div[@class="photo-details"]//text()',
-        'FORM_DATA': {
-            'listkanal': '0',
-            'tampilkan': 'submit'
-        }
+        'START': 'https://www.bisnis.com/index?c=0&d=%s',
+        'ARTICLES': '//ul[@class="l-style-none"]/li/div[2]/a/@href',
+        'NEXT_PAGES': '//ul[@class="pagination"]/li/a/@href',
+        'TITLE': '//div[@class="col-custom left"]/h1/text()',
+        'AUTHOR': '//div[@class="author"]/text()',
+        'DATE': '//div[@class="author"]/text()',
+        'TAG': '//div[@class="tags"]/a/text()',
+        'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/span/text()',
+        'CONTENTS': '//div[@class="description"]/div[@class="row"]/div[@class="col-sm-10"]//text()'
     },
     'MEDIAINDONESIA': {
         'NAME': 'Media Indonesia',
