@@ -29,6 +29,9 @@ class PortalSpider(Spider):
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'Pikiran Rakyat':
             yield Request(self.portal['START'] % 1, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})
+        elif self.portal['NAME'] == 'Kontan':
+            self.portal['FORM_DATA']['date'] = self.date
+            yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -73,7 +76,11 @@ class PortalSpider(Spider):
                 if self.filter_by_date(response, 0) == 0:
                     return
             elif self.portal['NAME'] == "Jakarta Post" and self.stop:
-                return            
+                return
+            elif self.portal['NAME'] == 'Kontan':
+                if "insight" in article:
+                    continue
+                article = "https:{}".format(article)
 
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -91,12 +98,19 @@ class PortalSpider(Spider):
                 '//script/text()')[-1].re("window.last_publish_date = (.+?);\n")
             self.portal['FORM_DATA']['last_publish_date'] = data[0].strip('\"')
             yield FormRequest(self.portal['START'], self.parse, headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == 'Kontan':
+            if len(articles) == 0:
+                return
+            self.portal['FORM_DATA']['offset'] = str(int(
+                self.portal['FORM_DATA']['offset']) + 20)
+            yield FormRequest(self.portal['START'], self.parse, headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         else:
             pages = response.xpath(self.portal['NEXT_PAGES']).extract()
 
         for next_page in pages:
             if self.portal['NAME'] == 'Suara Merdeka':
-                next_page = "https://www.suaramerdeka.com/index.php/news/indeks{}".format(next_page)
+                next_page = "https://www.suaramerdeka.com/index.php/news/indeks{}".format(
+                    next_page)
             else:
                 yield response.follow(next_page, self.parse, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -131,11 +145,12 @@ class PortalSpider(Spider):
             author = self.strip(author)
         elif self.portal['NAME'] == "Suara Merdeka":
             regex = re.compile(r'\(.+\/.+\/.+\)', re.IGNORECASE)
-            author = response.xpath('//p[@style="font-weight: bold;"]/text()').extract_first()
+            author = response.xpath(
+                '//p[@style="font-weight: bold;"]/text()').extract_first()
             author = regex.findall(author)[0]
             author = author.split('/')
             author = author[0][1:]
-            
+
         return author
 
     def parse_date(self, response):
@@ -175,7 +190,7 @@ class PortalSpider(Spider):
             category = response.request.url.split("/")[3]
         elif self.portal['NAME'] == 'Suara Merdeka':
             category = category.split("\\")[2]
-            category = self.strip(category)      
+            category = self.strip(category)
 
         return category
 
@@ -212,10 +227,10 @@ class PortalSpider(Spider):
                 continue
 
             content_norm = regex.sub("", content)
-            
+
             if has_stop_criteria and stop_criteria.match(content):
                 break
-            
+
             contents_result = '{} {}'.format(contents_result, content_norm)
             contents_result = self.strip(contents_result)
 

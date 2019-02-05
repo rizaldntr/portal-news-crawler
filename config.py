@@ -204,7 +204,7 @@ CONFIG = {
         'CATEGORY': '//a[@class="btn active btn-secondary btn-sm"]/text()',
         'CONTENTS': '//div[@id="content-article"]//text()',
     },
-        'JAKARTAPOST': {
+    'JAKARTAPOST': {
         'NAME': 'Jakarta Post',
         'START': 'https://www.thejakartapost.com/news/index',
         'ARTICLES': '//div[@class="newsWord"]/a[2]/@href',
@@ -217,7 +217,7 @@ CONFIG = {
         'CONTENTS': '//div[@class="col-md-10 col-xs-12 detailNews"]//text()',
         'STOP_CRITERION': r'Topics :',
     },
-        'METROTVNEWS': {
+    'METROTVNEWS': {
         'NAME': 'Metrotvnews',
         'START': 'http://www.metrotvnews.com/index/%s',
         'ARTICLES': '//ul/li/h2/a/@href',
@@ -232,7 +232,7 @@ CONFIG = {
         'EXCLUDE_TEXT': r'.*Video.*',
         'STOP_CRITERION': r'\(\S+\)'
     },
-        'SUARAMERDEKA': {
+    'SUARAMERDEKA': {
         'NAME': 'Suara Merdeka',
         'START': 'https://www.suaramerdeka.com/index.php/news/indeks?d=%s',
         'ARTICLES': '//h3[@class="title-semibold-dark size-lg mb-15"]/a/@href',
@@ -244,6 +244,22 @@ CONFIG = {
         'CATEGORY': '//ul[@class="post-info-dark mt-10"]/li/a/text()[2]',
         'CONTENTS': '//div[@class="news-details-layout1"]/p/text()',
         'STOP_CRITERION': r'\(\S+\/\S+\/\S+\)'
+    },
+    'KONTAN': {
+        'NAME': 'Kontan',
+        'START': 'https://search.kontan.co.id/indeks/see_more_indeks',
+        'ARTICLES': '//div[@class="sp-hl linkto-black"]/h1/a/@href',
+        'NEXT_PAGES': '/',
+        'TITLE': '//h1[@class="detail-desk"]/text()',
+        'AUTHOR': '//meta[@name="content_author"]/@content',
+        'DATE': '//meta[@name="content_PublishedDate"]/@content',
+        'TAG': '//div[@class="tagl fleft fs14"]//a/text()',
+        'CATEGORY': '//meta[@name="content_category"]/@content',
+        'CONTENTS': '//div[@class="tmpt-desk-kon"]/p/text()',
+        'FORM_DATA': {
+            'nama_kanal': '',
+            'offset': '0'
+        },
     },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
@@ -264,7 +280,8 @@ CONFIG = {
         'www.pikiran-rakyat.com',
         'www.thejakartapost.com',
         'metrotvnews.com',
-        'www.suaramerdeka.com'
+        'www.suaramerdeka.com',
+        'kontan.co.id'
     ]
 }
 
