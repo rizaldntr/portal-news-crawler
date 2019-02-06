@@ -261,6 +261,23 @@ CONFIG = {
             'offset': '0'
         },
     },
+    'INILAH': {
+        'NAME': 'Inilah',
+        'START': 'https://www.inilah.com/indeks/',
+        'ARTICLES': '//div[@class="w-li"]//a/@href',
+        'NEXT_PAGES': '/',
+        'TITLE': '//h2[@id="current-title-0"]/text()',
+        'AUTHOR': '//h6/span/text()',
+        'DATE': '/',
+        'TAG': '//ul/li/h2/a/text()',
+        'CATEGORY': '/',
+        'CONTENTS': '//div[@class="article-content"]/p/text()',
+        'FORM_DATA': {
+            'kanal': '0',
+            'submit': 'cari'
+        },
+    },
+
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -281,7 +298,8 @@ CONFIG = {
         'www.thejakartapost.com',
         'metrotvnews.com',
         'www.suaramerdeka.com',
-        'kontan.co.id'
+        'kontan.co.id',
+        'inilah.com'
     ]
 }
 

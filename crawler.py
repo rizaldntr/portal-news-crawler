@@ -32,6 +32,12 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Kontan':
             self.portal['FORM_DATA']['date'] = self.date
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == 'Inilah':
+            date = self.date.split("-")
+            self.portal['FORM_DATA']['tanggal'] = str(int(date[2]))
+            self.portal['FORM_DATA']['bulan'] = str(int(date[1]))
+            self.portal['FORM_DATA']['tahun'] = str(int(date[0]))
+            yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -174,7 +180,15 @@ class PortalSpider(Spider):
             date = date.split('•')
             date = date[1]
             date = self.strip(date)
-
+        elif self.portal['NAME'] == 'Inilah':
+            datas = response.xpath('//h6/text()').extract()
+            for data in datas:
+                if "|" in data:
+                    date = data.split("|")
+                    if len(date[0]) <= 5:
+                        date = date[1]
+                    else:
+                        date = date[0]
         return date
 
     def parse_tag(self, response):
@@ -191,7 +205,9 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Suara Merdeka':
             category = category.split("\\")[2]
             category = self.strip(category)
-
+        elif self.portal['NAME'] == 'Inilah':
+            category = response.request.url.split("/")[2]
+            category = category.split(".")[0]
         return category
 
     def parse_content(self, response):
