@@ -277,7 +277,19 @@ CONFIG = {
             'submit': 'cari'
         },
     },
-
+    'MERDEKA': {
+        'NAME': 'Merdeka',
+        'START': 'https://www.merdeka.com/indeks-berita/',
+        'ARTICLES': '//ul[@class="mdk-idn-nd-centlist"]/li/a/@href',
+        'NEXT_PAGES': '//div[@class="mdk-page"]/a/@href',
+        'TITLE': '//div[@class="mdk-dt-headline"]/h1/text()',
+        'AUTHOR': '//meta[@name="author"]/@content',
+        'DATE': '//div[@class="col-dt-left"]/span/text()',
+        'TAG': '//ol[@class="mdk-list-terkait"]/li/a/text()',
+        'CATEGORY': '//meta[@property="section"]/@content',
+        'CONTENTS': '//div[@class="mdk-body-paragpraph"]/p//text()',
+        'ART_DATE': '//span[@class="mdk-idn-date"]/text()'
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -299,7 +311,8 @@ CONFIG = {
         'metrotvnews.com',
         'www.suaramerdeka.com',
         'kontan.co.id',
-        'inilah.com'
+        'inilah.com',
+        'www.merdeka.com'
     ]
 }
 

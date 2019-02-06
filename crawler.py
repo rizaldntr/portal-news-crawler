@@ -25,7 +25,7 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'VIVA':
             self.portal['FORM_DATA']['last_publish_date'] = self.date + " 23:59:59"
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
-        elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Jakarta Post"]:
+        elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Jakarta Post", "Merdeka"]:
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'Pikiran Rakyat':
             yield Request(self.portal['START'] % 1, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})
@@ -70,7 +70,7 @@ class PortalSpider(Spider):
                 continue
             elif self.portal['NAME'] == "Bisnis" and "koran.bisnis" in article:
                 continue
-            elif self.portal['NAME'] in ["Media Indonesia", "Antara News"]:
+            elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Merdeka"]:
                 if self.filter_by_date(response, count) == 0:
                     return
                 elif self.filter_by_date(response, count) == 2:
@@ -87,6 +87,11 @@ class PortalSpider(Spider):
                 if "insight" in article:
                     continue
                 article = "https:{}".format(article)
+
+            if self.portal['NAME'] == 'Merdeka':
+                if "foto" in article:
+                    continue
+                article = "https://www.merdeka.com{}".format(article)
 
             yield Request(article, callback=self.parse_article, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -317,6 +322,11 @@ class PortalSpider(Spider):
             date = response.xpath(self.portal['DATE']).extract_first()
             date = date[5:]
             art_date = datetime.strptime(date, '%B %d, %Y')
+        elif self.portal['NAME'] == 'Merdeka':
+            art_date = response.xpath(
+                self.portal['ART_DATE']).extract()[count]
+            art_date = art_date[:-9]
+            art_date = datetime.strptime(art_date, '%A, %d %B %Y')
 
         filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:
