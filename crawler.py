@@ -38,6 +38,9 @@ class PortalSpider(Spider):
             self.portal['FORM_DATA']['bulan'] = str(int(date[1]))
             self.portal['FORM_DATA']['tahun'] = str(int(date[0]))
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == 'Suara':
+            year = self.date.split("-")[0]
+            yield Request(self.portal['START'] % year, headers={'User-Agent': CONFIG['USER_AGENT']})
         else:
             yield Request(self.portal['START'] % self.date, headers={'User-Agent': CONFIG['USER_AGENT']})
 
@@ -70,7 +73,7 @@ class PortalSpider(Spider):
                 continue
             elif self.portal['NAME'] == "Bisnis" and "koran.bisnis" in article:
                 continue
-            elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Merdeka"]:
+            elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Merdeka", "Suara"]:
                 if self.filter_by_date(response, count) == 0:
                     return
                 elif self.filter_by_date(response, count) == 2:
@@ -327,6 +330,12 @@ class PortalSpider(Spider):
                 self.portal['ART_DATE']).extract()[count]
             art_date = art_date[:-9]
             art_date = datetime.strptime(art_date, '%A, %d %B %Y')
+        elif self.portal['NAME'] == 'Suara':
+            urls = response.xpath(
+                self.portal['ART_DATE']).extract()[count]
+            urls_split = urls.split("/")
+            art_date = datetime(int(urls_split[4]), int(
+                urls_split[5]), int(urls_split[6]))
 
         filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:

@@ -290,6 +290,19 @@ CONFIG = {
         'CONTENTS': '//div[@class="mdk-body-paragpraph"]/p//text()',
         'ART_DATE': '//span[@class="mdk-idn-date"]/text()'
     },
+    'SUARA': {
+        'NAME': 'Suara',
+        'START': 'https://www.suara.com/indeks/terkini/all/%s',
+        'ARTICLES': '//h4[@class="post-title"]/a/@href',
+        'NEXT_PAGES': '//ul[@class="pagination"]/li/a/@href',
+        'TITLE': '//div[@class="title"]/h1/text()',
+        'AUTHOR': '//div[@class="fl"]/author/text() | //div[@class="fl"]/author/span/text()',
+        'DATE': '//div[@class="fr"]/time/text()',
+        'TAG': '//div[@class="tagDetailList"]/ul/li/div/h2/a/text()',
+        'CATEGORY': '//div[@class="header-breadcrumb"]/ul/li[@class="active"]/a/text()',
+        'CONTENTS': '//div[@class="content-article"]/div/p/text()',
+        'ART_DATE': '//h4[@class="post-title"]/a/@href'
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -312,7 +325,8 @@ CONFIG = {
         'www.suaramerdeka.com',
         'kontan.co.id',
         'inilah.com',
-        'www.merdeka.com'
+        'www.merdeka.com',
+        'www.suara.com'
     ]
 }
 
