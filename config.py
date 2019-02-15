@@ -53,7 +53,7 @@ CONFIG = {
         'DATE_FORMAT': '%d %B %Y %H:%M WIB',
         'TAG': '//div[@class="tags"]/a/text()',
         'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/span/text()',
-        'CONTENTS': '//div[@class="description"]/div[@class="row"]/div[@class="col-sm-10"]//text()'
+        'CONTENTS': '//div[@class="description"]/div[@class="row sticky-wrapper"]/div[@class="col-sm-10"]/p/text()'
     },
     'CNN': {
         'NAME': 'CNN',

@@ -176,6 +176,9 @@ class PortalSpider(Spider):
             author = author[0][1:]
         elif self.portal['NAME'] == 'Berita Jakarta':
             author = self.data_json['author']['name']
+        elif self.portal['NAME'] == "Bisnis":
+            author = response.xpath(self.portal['AUTHOR']).extract()
+            author = author[1].split("|")[0]
 
         if author is not None:
             author = author.strip()
