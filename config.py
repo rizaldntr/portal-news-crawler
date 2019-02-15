@@ -63,10 +63,10 @@ CONFIG = {
         'TITLE': '//h1[@class="title"]/text()',
         'AUTHOR': '/',
         'DATE': '//div[@class="date"]/text()',
-        'DATE': '//div[@class="date"]/text()',
+        'DATE_FORMAT': '%A, %d/%m/%Y %H:%M WIB',
         'TAG': '//div[@class="detail_tag mb20"]/a/text()',
         'CATEGORY': '//a[@class="gtm_breadcrumb_kanal"]//text()',
-        'CONTENTS': '//span[@id="detikdetailtext"]//text()',
+        'CONTENTS': '//div[@id="detikdetailtext"]//text()',
     },
     'DETIK': {
         'NAME': 'Detik',
