@@ -303,6 +303,18 @@ CONFIG = {
         'CONTENTS': '//div[@class="content-article"]/div/p/text()',
         'ART_DATE': '//h4[@class="post-title"]/a/@href'
     },
+    'BERITAJAKARTA': {
+        'NAME': 'Berita Jakarta',
+        'START': 'http://www.beritajakarta.id/news_index',
+        'ARTICLES': '//div[@class="col-md-9"]/h4/a/@href',
+        'NEXT_PAGES': '//ul[@class="pagination"]/li/a/@href',
+        'TITLE': '/',
+        'AUTHOR': '/',
+        'DATE': '/',
+        'TAG': '/',
+        'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/text()',
+        'CONTENTS': '//div[@class="clearfix mt-10"]/p/text()',
+    },
     'USER_AGENT': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0",
     'ALLOWED_DOMAIN': [
         'www.tribunnews.com',
@@ -326,7 +338,8 @@ CONFIG = {
         'kontan.co.id',
         'inilah.com',
         'www.merdeka.com',
-        'www.suara.com'
+        'www.suara.com',
+        'www.beritajakarta.id'
     ]
 }
 

@@ -5,6 +5,7 @@ import locale
 from scrapy.http import Request, FormRequest
 from scrapy.spiders import Spider
 from scrapy.crawler import CrawlerProcess
+from scrapy.exceptions import CloseSpider
 from datetime import datetime
 
 from config import CONFIG
@@ -25,7 +26,7 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'VIVA':
             self.portal['FORM_DATA']['last_publish_date'] = self.date + " 23:59:59"
             yield FormRequest(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
-        elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Jakarta Post", "Merdeka"]:
+        elif self.portal['NAME'] in ["Media Indonesia", "Antara News", "Jakarta Post", "Merdeka", "Berita Jakarta"]:
             yield Request(self.portal['START'], headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'Pikiran Rakyat':
             yield Request(self.portal['START'] % 1, self.parse_pikiran_rakyat, headers={'User-Agent': CONFIG['USER_AGENT']})
@@ -55,6 +56,8 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Jakarta Post':
             locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
             self.stop = False
+        elif self.portal['NAME'] == 'Berita Jakarta':
+            self.data_json = json.loads("{}")
         self.cnn_attr = {
             'page': 1,
             'articles_size': 0
@@ -135,6 +138,8 @@ class PortalSpider(Spider):
             title = regex.sub("", title)
         elif self.portal['NAME'] == 'CNN':
             title = self.strip(title)
+        elif self.portal['NAME'] == 'Berita Jakarta':
+            title = self.data_json['description']
 
         return title
 
@@ -164,6 +169,8 @@ class PortalSpider(Spider):
             author = regex.findall(author)[0]
             author = author.split('/')
             author = author[0][1:]
+        elif self.portal['NAME'] == 'Berita Jakarta':
+            author = self.data_json['author']['name']
 
         return author
 
@@ -197,6 +204,9 @@ class PortalSpider(Spider):
                         date = date[1]
                     else:
                         date = date[0]
+        elif self.portal['NAME'] == 'Berita Jakarta':
+            date = self.data_json['datePublished']
+
         return date
 
     def parse_tag(self, response):
@@ -261,6 +271,16 @@ class PortalSpider(Spider):
         return contents_result
 
     def parse_article(self, response):
+
+        if self.portal['NAME'] == 'Berita Jakarta':
+            data = response.xpath(
+                '//script[@type="application/ld+json"][2]/text()').extract_first()
+            self.data_json = json.loads(data)
+            if self.filter_by_date(response, 0) == 0:
+                raise CloseSpider('Stop Crawler')
+            elif self.filter_by_date(response, 0) == 2:
+                return
+
         is_store = True
 
         if self.portal['NAME'] == "Jakarta Post":
@@ -336,6 +356,9 @@ class PortalSpider(Spider):
             urls_split = urls.split("/")
             art_date = datetime(int(urls_split[4]), int(
                 urls_split[5]), int(urls_split[6]))
+        elif self.portal['NAME'] == 'Berita Jakarta':
+            art_date = datetime.strptime(
+                self.data_json['datePublished'][0:10], '%Y-%m-%d')
 
         filter_date = datetime.strptime(self.date, '%Y-%m-%d')
         if art_date == filter_date:
