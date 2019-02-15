@@ -21,7 +21,9 @@ class PortalSpider(Spider):
             yield Request(self.portal['START'] % (self.date, self.cnn_attr['page'], self.date), headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'Bisnis':
             date_tmp = datetime.strptime(self.date, '%Y-%m-%d')
+            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
             date_tmp = date_tmp.strftime("%d+%B+%Y")
+            locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
             yield Request(self.portal['START'] % date_tmp, headers={'User-Agent': CONFIG['USER_AGENT']})
         elif self.portal['NAME'] == 'VIVA':
             self.portal['FORM_DATA']['last_publish_date'] = self.date + " 23:59:59"
@@ -141,6 +143,9 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Berita Jakarta':
             title = self.data_json['description']
 
+        if title is not None:
+            title = title.strip()
+
         return title
 
     def parse_author(self, response):
@@ -171,6 +176,9 @@ class PortalSpider(Spider):
             author = author[0][1:]
         elif self.portal['NAME'] == 'Berita Jakarta':
             author = self.data_json['author']['name']
+
+        if author is not None:
+            author = author.strip()
 
         return author
 
@@ -206,6 +214,11 @@ class PortalSpider(Spider):
                         date = date[0]
         elif self.portal['NAME'] == 'Berita Jakarta':
             date = self.data_json['datePublished']
+        elif self.portal['NAME'] == 'Suara Merdeka':
+            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+        # Date normalizer
+        date = datetime.strptime(date, self.portal['DATE_FORMAT'])
 
         return date
 
@@ -226,6 +239,10 @@ class PortalSpider(Spider):
         elif self.portal['NAME'] == 'Inilah':
             category = response.request.url.split("/")[2]
             category = category.split(".")[0]
+
+        if category is not None:
+            category = category.strip()
+
         return category
 
     def parse_content(self, response):
@@ -261,12 +278,14 @@ class PortalSpider(Spider):
                 continue
 
             content_norm = regex.sub("", content)
+            contents_result = '{} {}'.format(contents_result, content_norm)
+            contents_result = self.strip(contents_result)
 
             if has_stop_criteria and stop_criteria.match(content):
                 break
 
-            contents_result = '{} {}'.format(contents_result, content_norm)
-            contents_result = self.strip(contents_result)
+        if contents_result is not None:
+            contents_result = contents_result.strip()
 
         return contents_result
 

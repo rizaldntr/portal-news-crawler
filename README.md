@@ -5,17 +5,25 @@ Script untuk melakukan _crawling_ pada sejumlah portal news di Indonesia.
 # List Portal News
 
 - [Antara News](https://www.antaranews.com/)
+- [Berita Jakarta](http://www.beritajakarta.id/)
 - [Berita Satu](https://www.beritasatu.com/)
 - [Bisnis Indonesia](http://www.bisnis.com/)
 - [CNN Indonesia](https://www.cnnindonesia.com/)
 - [Detik](https://news.detik.com/)
+- [Inilah](https://www.inilah.com/)
+- [Jakarta Post](https://www.thejakartapost.com/)
 - [Kompas](https://www.kompas.com/)
+- [Kontan](https://www.kontan.co.id/)
 - [Liputan 6](https://www.liputan6.com/)
 - [Media Indonesia](http://mediaindonesia.com/)
+- [Merdeka](https://www.merdeka.com/)
+- [Metrotv News](http://www.metrotvnews.com)
 - [Okezone](https://www.okezone.com/)
 - [Pikiran Rakyat](https://www.pikiran-rakyat.com/)
 - [Republika](https://www.republika.co.id/)
 - [Sindo News](https://www.sindonews.com/)
+- [Suara](https://www.suara.com/)
+- [Suara Merdeka](suaramerdeka.com)
 - [Tempo](https://www.tempo.co/)
 - [Tribun News](http://www.tribunnews.com/)
 - [VIVA](https://www.viva.co.id/)
@@ -51,18 +59,25 @@ $ scrapy runspider crawler.py -a date=2018-11-29 -a portal=pikiran-rakyat -o cra
 Portal Name:
 
 - ANTARANEWS
+- BERITAJAKARTA
 - BERITASATU
 - BISNIS
 - CNN
 - DETIK
+- INILAH
 - JAKARTAPOST
 - KOMPAS
+- KONTAN
 - LIPUTAN6
 - MEDIAINDONESIA
+- MERDEKA
+- METROTVNEWS
 - OKEZONE
 - PIKIRAN-RAKYAT
 - REPUBLIKA
 - SINDO
+- SUARA
+- SUARAMERDEKA
 - TEMPO
 - TRIBUN
 - VIVA
