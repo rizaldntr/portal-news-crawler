@@ -60,6 +60,7 @@ class PortalSpider(Spider):
             self.stop = False
         elif self.portal['NAME'] == 'Berita Jakarta':
             self.data_json = json.loads("{}")
+            self.stop = False
         self.cnn_attr = {
             'page': 1,
             'articles_size': 0
@@ -123,6 +124,8 @@ class PortalSpider(Spider):
             self.portal['FORM_DATA']['offset'] = str(int(
                 self.portal['FORM_DATA']['offset']) + 20)
             yield FormRequest(self.portal['START'], self.parse, headers={'User-Agent': CONFIG['USER_AGENT']}, formdata=self.portal['FORM_DATA'])
+        elif self.portal['NAME'] == "Berita Jakarta" and self.stop:
+            pages = []
         else:
             pages = response.xpath(self.portal['NEXT_PAGES']).extract()
 
@@ -299,7 +302,8 @@ class PortalSpider(Spider):
                 '//script[@type="application/ld+json"][2]/text()').extract_first()
             self.data_json = json.loads(data)
             if self.filter_by_date(response, 0) == 0:
-                raise CloseSpider('Stop Crawler')
+                self.stop = True
+                return
             elif self.filter_by_date(response, 0) == 2:
                 return
 
@@ -320,6 +324,8 @@ class PortalSpider(Spider):
             category = self.parse_category(response)
             content = self.parse_content(response)
         except Exception as e:
+            print(e)
+            print("============================================================")
             is_store = False
 
         if is_store:

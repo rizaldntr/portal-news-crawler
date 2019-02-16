@@ -23,10 +23,10 @@ CONFIG = {
         'TITLE': '/',
         'AUTHOR': '/',
         'DATE': '/',
-        'DATE_FORMAT': '%A, %d %B %Y %H:%M WIB',
+        'DATE_FORMAT': '%Y-%m-%dT%H:%M:%S+07:00',
         'TAG': '/',
         'CATEGORY': '//ol[@class="breadcrumb"]/li[2]/a/text()',
-        'CONTENTS': '//div[@class="clearfix mt-10"]/p/text()',
+        'CONTENTS': '//div[@class="clearfix mt-10"]/p/text() | //div[@align="left"]/p/text()',
     },
     'BERITASATU': {
         'NAME': 'Berita Satu',
